@@ -23,7 +23,16 @@ npm run dev
 npm run build
 ```
 
-生成物は `dist/` に出ます。
+生成物は `docs/` に出ます。
+
+## GitHub Pages
+
+GitHub Pages では以下の設定で公開できます。
+
+- Branch: `main`
+- Folder: `/docs`
+
+このリポジトリは `docs/` にビルド済み静的ファイルを置く構成です。
 
 ## Assets
 
