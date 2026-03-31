@@ -6,6 +6,7 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 
 const viewer = document.querySelector("#viewer");
 const statusLabel = document.querySelector("#statusLabel");
+const searchParams = new URLSearchParams(window.location.search);
 
 const scene = new THREE.Scene();
 
@@ -17,17 +18,15 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(viewer.clientWidth, viewer.clientHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.7;
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMappingExposure = 0.8;
 viewer.appendChild(renderer.domElement);
 
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.03).texture;
-scene.background = new THREE.Color("#e3e3e3");
+scene.background = new THREE.Color("#f3f3f1");
 
 const camera = new THREE.PerspectiveCamera(27, viewer.clientWidth / viewer.clientHeight, 0.01, 50);
-camera.position.set(0.02, 0.02, 3.12);
+camera.position.set(0.03, 0, 3.28);
 scene.add(camera);
 
 const stage = new THREE.Group();
@@ -36,84 +35,73 @@ scene.add(stage);
 const keychainGroup = new THREE.Group();
 stage.add(keychainGroup);
 
-scene.add(new THREE.HemisphereLight(0xf5f5f5, 0xa3abba, 0.54));
+scene.add(new THREE.HemisphereLight(0xffffff, 0xe4e4e0, 0.7));
 
-const keyLight = new THREE.DirectionalLight(0xfffaf5, 1.18);
-keyLight.position.set(1.35, 1.8, 2.9);
-keyLight.castShadow = true;
-keyLight.shadow.mapSize.set(1024, 1024);
-keyLight.shadow.bias = -0.00008;
-keyLight.shadow.normalBias = 0.01;
-keyLight.shadow.camera.left = -2;
-keyLight.shadow.camera.right = 2;
-keyLight.shadow.camera.top = 2;
-keyLight.shadow.camera.bottom = -2;
-keyLight.shadow.camera.near = 0.5;
-keyLight.shadow.camera.far = 8;
+const keyLight = new THREE.DirectionalLight(0xffffff, 1.28);
+keyLight.position.set(1.5, 1.65, 2.8);
 scene.add(keyLight);
 
-const fillLight = new THREE.DirectionalLight(0xe3e7ef, 0.42);
-fillLight.position.set(-1.55, 0.72, 2.05);
+const fillLight = new THREE.DirectionalLight(0xfaf8f5, 0.58);
+fillLight.position.set(-1.4, 0.55, 2.1);
 scene.add(fillLight);
 
-const rimLight = new THREE.PointLight(0xcff3ff, 1.22, 0, 2);
-rimLight.position.set(1.1, 0.16, 1.2);
+const rimLight = new THREE.PointLight(0xffffff, 0.9, 0, 2);
+rimLight.position.set(1.2, 0.12, 1.1);
 scene.add(rimLight);
 
-const warmKick = new THREE.PointLight(0xffe0be, 0.52, 0, 2);
-warmKick.position.set(-0.95, -0.1, 1.0);
+const glossLight = new THREE.PointLight(0xffffff, 0.82, 0, 2);
+glossLight.position.set(-0.25, 0.9, 1.45);
+scene.add(glossLight);
+
+const warmKick = new THREE.PointLight(0xfff4eb, 0.34, 0, 2);
+warmKick.position.set(-0.92, -0.08, 1.0);
 scene.add(warmKick);
 
-const floor = new THREE.Mesh(
-  new THREE.CircleGeometry(2.8, 96),
-  new THREE.MeshStandardMaterial({
-    color: 0xe1e1e1,
-    roughness: 0.18,
-    metalness: 0.02,
-    envMapIntensity: 0.32,
-  })
-);
-floor.rotation.x = -Math.PI / 2;
-floor.position.y = -0.36;
-floor.scale.set(1.34, 1, 0.94);
-stage.add(floor);
+function createShadowTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+
+  const context = canvas.getContext("2d");
+  const gradient = context.createRadialGradient(256, 270, 30, 256, 270, 220);
+  gradient.addColorStop(0, "rgba(34, 29, 31, 0.24)");
+  gradient.addColorStop(0.42, "rgba(34, 29, 31, 0.12)");
+  gradient.addColorStop(0.72, "rgba(34, 29, 31, 0.045)");
+  gradient.addColorStop(1, "rgba(34, 29, 31, 0)");
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+const shadowTexture = createShadowTexture();
 
 const shadowDisc = new THREE.Mesh(
-  new THREE.PlaneGeometry(2.8, 1.8),
-  new THREE.ShadowMaterial({
-    color: 0x2a2427,
-    opacity: 0.12,
-  })
-);
-shadowDisc.rotation.x = -Math.PI / 2;
-shadowDisc.position.y = -0.359;
-shadowDisc.position.z = 0.04;
-shadowDisc.receiveShadow = true;
-stage.add(shadowDisc);
-
-const softShadow = new THREE.Mesh(
-  new THREE.CircleGeometry(1.2, 96),
+  new THREE.PlaneGeometry(2.7, 1.9),
   new THREE.MeshBasicMaterial({
-    color: 0x645952,
+    map: shadowTexture,
     transparent: true,
-    opacity: 0.06,
+    opacity: 0.82,
     depthWrite: false,
   })
 );
-softShadow.rotation.x = -Math.PI / 2;
-softShadow.position.y = -0.358;
-softShadow.position.z = 0.05;
-softShadow.scale.set(1.18, 0.72, 1);
-stage.add(softShadow);
+shadowDisc.position.set(0, -0.23, -0.42);
+stage.add(shadowDisc);
 
-const backdrop = new THREE.Mesh(
-  new THREE.PlaneGeometry(6, 4),
+const softShadow = new THREE.Mesh(
+  new THREE.PlaneGeometry(1.8, 1.15),
   new THREE.MeshBasicMaterial({
-    color: 0xe3e3e3,
+    map: shadowTexture,
+    transparent: true,
+    opacity: 0.26,
+    depthWrite: false,
   })
 );
-backdrop.position.set(0, 0.52, -1.8);
-scene.add(backdrop);
+softShadow.position.set(0, -0.25, -0.3);
+softShadow.scale.set(1.05, 0.7, 1);
+stage.add(softShadow);
 
 const textureLoader = new THREE.TextureLoader();
 const printTexture = textureLoader.load("./assets/1_3_print_rgba.png");
@@ -127,18 +115,18 @@ const whiteTexture = textureLoader.load("./assets/1_3_white_rgba.png");
 
 // Body stays readable from the front while using physical transmission for acrylic depth.
 const acrylicBodyMaterial = new THREE.MeshPhysicalMaterial({
-  color: new THREE.Color("#f7f9fa"),
+  color: new THREE.Color("#fbfbfa"),
   transparent: true,
   opacity: 1,
-  transmission: 0.92,
-  thickness: 0.8,
-  roughness: 0.08,
+  transmission: 0.93,
+  thickness: 0.76,
+  roughness: 0.07,
   metalness: 0,
   ior: 1.5,
   clearcoat: 1,
-  clearcoatRoughness: 0.03,
-  specularIntensity: 0.92,
-  envMapIntensity: 1.28,
+  clearcoatRoughness: 0.02,
+  specularIntensity: 1,
+  envMapIntensity: 1.34,
   attenuationDistance: 2,
   attenuationColor: new THREE.Color("#ffffff"),
 });
@@ -148,14 +136,14 @@ const acrylicCapMaterial = new THREE.MeshPhysicalMaterial({
   transparent: true,
   opacity: 1,
   transmission: 0.94,
-  thickness: 1.0,
-  roughness: 0.05,
+  thickness: 0.88,
+  roughness: 0.04,
   metalness: 0,
   ior: 1.51,
   clearcoat: 1,
-  clearcoatRoughness: 0.025,
-  specularIntensity: 0.96,
-  envMapIntensity: 1.34,
+  clearcoatRoughness: 0.015,
+  specularIntensity: 1.04,
+  envMapIntensity: 1.38,
   attenuationDistance: 2,
   attenuationColor: new THREE.Color("#ffffff"),
 });
@@ -166,13 +154,14 @@ const edgeGlowMaterial = new THREE.MeshPhysicalMaterial({
   transparent: true,
   opacity: 1,
   transmission: 0.95,
-  thickness: 1.1,
-  roughness: 0.06,
+  thickness: 0.96,
+  roughness: 0.035,
   metalness: 0,
   ior: 1.51,
   envMapIntensity: 1.42,
   clearcoat: 1,
-  clearcoatRoughness: 0.02,
+  clearcoatRoughness: 0.01,
+  specularIntensity: 1.08,
   attenuationDistance: 2.2,
   attenuationColor: new THREE.Color("#ffffff"),
 });
@@ -188,22 +177,41 @@ const printMaterial = new THREE.MeshBasicMaterial({
   map: printTexture,
   transparent: true,
   alphaTest: 0.08,
-  color: new THREE.Color("#fcfcfc"),
+  color: new THREE.Color("#f1eef4"),
+  side: THREE.DoubleSide,
 });
 
 const metalMaterial = new THREE.MeshPhysicalMaterial({
   color: new THREE.Color("#c7ccd5"),
   metalness: 1,
-  roughness: 0.1,
-  envMapIntensity: 1.9,
-  clearcoat: 0.32,
+  roughness: 0.09,
+  envMapIntensity: 1.75,
+  clearcoat: 0.26,
   clearcoatRoughness: 0.06,
 });
 
 let rootModel;
-let reflectionModel;
-const cameraLookAt = new THREE.Vector3(0.04, -0.06, 0);
+const cameraLookAt = new THREE.Vector3(0.02, -0.03, 0);
 const targetLookAt = cameraLookAt.clone();
+const angleParam = searchParams.get("angle");
+const initialYaw = THREE.MathUtils.clamp(angleParam === null ? -0.24 : Number(angleParam), -Math.PI, Math.PI);
+const baseRotation = {
+  x: 0.11,
+  y: initialYaw,
+  z: 0.012,
+};
+const rotationState = {
+  current: initialYaw,
+  target: initialYaw,
+  velocity: 0,
+  dragging: false,
+  pointerId: null,
+  startX: 0,
+  startY: 0,
+  lastX: 0,
+  horizontalIntent: false,
+  locked: false,
+};
 
 const loader = new GLTFLoader();
 loader.load(
@@ -217,7 +225,7 @@ loader.load(
           return;
         }
 
-        child.castShadow = true;
+        child.castShadow = false;
         child.receiveShadow = false;
 
         const name = `${child.name} ${child.material?.name ?? ""}`.toLowerCase();
@@ -247,40 +255,15 @@ loader.load(
       const size = box.getSize(new THREE.Vector3());
 
       rootModel.position.sub(center);
-      rootModel.position.y = 0.03;
-      const scale = 1.22 / Math.max(size.x, size.y);
+      rootModel.position.y = 0;
+      const scale = 1.15 / Math.max(size.x, size.y);
       rootModel.scale.setScalar(scale);
-      rootModel.rotation.x = 0.12;
-      rootModel.rotation.y = -0.32;
-      rootModel.rotation.z = 0.015;
+      rootModel.rotation.x = baseRotation.x;
+      rootModel.rotation.y = baseRotation.y;
+      rootModel.rotation.z = baseRotation.z;
 
       keychainGroup.add(rootModel);
-
-      reflectionModel = rootModel.clone(true);
-      reflectionModel.traverse((child) => {
-        if (!child.isMesh) {
-          return;
-        }
-        child.material = child.material.clone();
-        child.material.transparent = true;
-        child.material.opacity = 0.08;
-        child.material.depthWrite = false;
-        if ("roughness" in child.material) {
-          child.material.roughness = 0.45;
-        }
-        if ("metalness" in child.material) {
-          child.material.metalness = 0.02;
-        }
-      });
-      reflectionModel.scale.y *= -1;
-      reflectionModel.position.y = -0.7;
-      reflectionModel.position.z = 0.03;
-      reflectionModel.rotation.x = Math.PI - 0.12;
-      reflectionModel.rotation.y = -0.32;
-      reflectionModel.rotation.z = 0.015;
-      keychainGroup.add(reflectionModel);
-
-      statusLabel.textContent = "Front preview ready";
+      statusLabel.textContent = "Swipe left or right to rotate";
     } catch (error) {
       console.error(error);
       statusLabel.textContent = `Render error`;
@@ -309,7 +292,83 @@ window.addEventListener("resize", resize);
 resize();
 camera.lookAt(targetLookAt);
 
+function wrapAngle(angle) {
+  return THREE.MathUtils.euclideanModulo(angle + Math.PI, Math.PI * 2) - Math.PI;
+}
+
+function onPointerDown(event) {
+  rotationState.dragging = true;
+  rotationState.pointerId = event.pointerId;
+  rotationState.startX = event.clientX;
+  rotationState.startY = event.clientY;
+  rotationState.lastX = event.clientX;
+  rotationState.horizontalIntent = false;
+  rotationState.locked = false;
+  rotationState.velocity = 0;
+  viewer.setPointerCapture(event.pointerId);
+}
+
+function onPointerMove(event) {
+  if (!rotationState.dragging || event.pointerId !== rotationState.pointerId) {
+    return;
+  }
+
+  const deltaX = event.clientX - rotationState.startX;
+  const deltaY = event.clientY - rotationState.startY;
+
+  if (!rotationState.locked) {
+    const travelX = Math.abs(deltaX);
+    const travelY = Math.abs(deltaY);
+    if (travelX < 8 && travelY < 8) {
+      return;
+    }
+    rotationState.horizontalIntent = travelX > travelY;
+    rotationState.locked = true;
+  }
+
+  if (!rotationState.horizontalIntent) {
+    return;
+  }
+
+  const moveX = event.clientX - rotationState.lastX;
+  rotationState.lastX = event.clientX;
+  rotationState.velocity = moveX * 0.0024;
+  rotationState.target = wrapAngle(rotationState.target + moveX * 0.0125);
+  event.preventDefault();
+}
+
+function finishPointer(event) {
+  if (rotationState.pointerId !== event.pointerId) {
+    return;
+  }
+  rotationState.dragging = false;
+  rotationState.pointerId = null;
+  rotationState.locked = false;
+  rotationState.horizontalIntent = false;
+}
+
+viewer.style.touchAction = "pan-y";
+viewer.addEventListener("pointerdown", onPointerDown);
+viewer.addEventListener("pointermove", onPointerMove);
+viewer.addEventListener("pointerup", finishPointer);
+viewer.addEventListener("pointercancel", finishPointer);
+viewer.addEventListener("pointerleave", finishPointer);
+
 renderer.setAnimationLoop(() => {
+  if (!rotationState.dragging) {
+    rotationState.target = wrapAngle(rotationState.target + rotationState.velocity);
+    rotationState.velocity *= 0.92;
+    if (Math.abs(rotationState.velocity) < 0.0001) {
+      rotationState.velocity = 0;
+    }
+  }
+
+  rotationState.current = THREE.MathUtils.lerp(rotationState.current, rotationState.target, 0.16);
+
+  if (rootModel) {
+    rootModel.rotation.y = rotationState.current;
+  }
+
   camera.lookAt(targetLookAt);
   renderer.render(scene, camera);
 });

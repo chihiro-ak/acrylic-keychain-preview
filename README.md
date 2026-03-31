@@ -46,3 +46,10 @@ npm run build
 - `public/assets/1_3_keychain_final.glb`
 - `public/assets/1_3_print_rgba.png`
 - `public/assets/1_3_white_rgba.png`
+
+## Latest Interaction Tuning
+
+- Removed the floor and mirrored reflection so the preview reads like a clean product shot against a white backdrop.
+- Replaced the old ground contact treatment with soft backdrop shadows that add depth without making the charm look embedded in a surface.
+- Neutralized the acrylic edge tint and pushed the gloss through `transmission`, `clearcoat`, `roughness`, and environment intensity instead of cyan coloring.
+- Added pointer and touch swipe rotation on the Y axis so front, angled, side, and back views can be inspected while keeping the initial front-focused pose.
