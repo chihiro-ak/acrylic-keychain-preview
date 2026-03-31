@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acrylic Charm Preview</title>
+    <meta
+      name="description"
+      content="アクリルキーホルダーの立体感をブラウザ上で確認するためのプレビュー"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="./assets/index-D1ZMi9MS.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Bfxwqxz_.css">
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="aurora aurora-left"></div>
+      <div class="aurora aurora-right"></div>
+      <main class="layout">
+        <section class="copy-panel">
+          <p class="eyebrow">Acrylic Product Preview</p>
+          <h1>アクキーの<br />立体感を<br />ブラウザで確認</h1>
+          <p class="lede">
+            完成モデルを使って、金具を含めたアクリルキーホルダーの見え方をブラウザ上で確認するための静的プレビューです。
+            正面から絵柄が見える商品写真寄りの見せ方に整えています。
+          </p>
+
+          <div class="stat-grid">
+            <article>
+              <span>Thickness</span>
+              <strong>3.0 mm</strong>
+            </article>
+            <article>
+              <span>Finish</span>
+              <strong>Gloss Acrylic</strong>
+            </article>
+            <article>
+              <span>Preview</span>
+              <strong>Front Static</strong>
+            </article>
+          </div>
+
+          <div class="control-block">
+            <div class="control-label">Preview Mode</div>
+            <div class="button-row">
+              <button class="mode-button active" type="button">正面固定</button>
+              <button class="mode-button passive" type="button">金具込み</button>
+              <button class="mode-button passive" type="button">静止表示</button>
+            </div>
+          </div>
+
+          <div class="note-card">
+            <p>見せ方メモ</p>
+            <ul>
+              <li>完成モデルを使って、金具まで含めた商品見えを優先しています。</li>
+              <li>正面から絵柄が読めるように、印刷面は少し明るく見える設定にしています。</li>
+              <li>アクリル面と金具の反射差で、キーホルダーらしさを出しています。</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="viewer-panel">
+          <div class="viewer-card">
+            <div class="viewer-topline">
+              <span class="live-pill">Live Preview</span>
+              <span id="statusLabel">Loading model...</span>
+            </div>
+            <div id="viewer"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
