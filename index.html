@@ -8,6 +8,15 @@
       name="description"
       content="アクリルキーホルダーの立体感をブラウザ上で確認するためのプレビュー"
     />
+    <script>
+      const isLocalHost =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+      const isDocsPath = window.location.pathname.includes("/docs/");
+      if (!isLocalHost && !isDocsPath) {
+        window.location.replace(new URL("./docs/", window.location.href));
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
