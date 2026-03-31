@@ -127,54 +127,54 @@ const whiteTexture = textureLoader.load("./assets/1_3_white_rgba.png");
 
 // Body stays readable from the front while using physical transmission for acrylic depth.
 const acrylicBodyMaterial = new THREE.MeshPhysicalMaterial({
-  color: new THREE.Color("#e3fbfb"),
+  color: new THREE.Color("#f7f9fa"),
   transparent: true,
   opacity: 1,
-  transmission: 0.9,
-  thickness: 0.74,
-  roughness: 0.1,
+  transmission: 0.92,
+  thickness: 0.8,
+  roughness: 0.08,
   metalness: 0,
-  ior: 1.49,
+  ior: 1.5,
   clearcoat: 1,
-  clearcoatRoughness: 0.04,
-  specularIntensity: 0.86,
-  envMapIntensity: 1.18,
-  attenuationDistance: 1.6,
-  attenuationColor: new THREE.Color("#cbf4f4"),
+  clearcoatRoughness: 0.03,
+  specularIntensity: 0.92,
+  envMapIntensity: 1.28,
+  attenuationDistance: 2,
+  attenuationColor: new THREE.Color("#ffffff"),
 });
 
 const acrylicCapMaterial = new THREE.MeshPhysicalMaterial({
-  color: new THREE.Color("#fbffff"),
+  color: new THREE.Color("#ffffff"),
   transparent: true,
   opacity: 1,
   transmission: 0.94,
-  thickness: 0.92,
+  thickness: 1.0,
   roughness: 0.05,
   metalness: 0,
-  ior: 1.5,
-  clearcoat: 0.96,
-  clearcoatRoughness: 0.03,
-  specularIntensity: 0.92,
-  envMapIntensity: 1.24,
-  attenuationDistance: 1.8,
-  attenuationColor: new THREE.Color("#e9ffff"),
+  ior: 1.51,
+  clearcoat: 1,
+  clearcoatRoughness: 0.025,
+  specularIntensity: 0.96,
+  envMapIntensity: 1.34,
+  attenuationDistance: 2,
+  attenuationColor: new THREE.Color("#ffffff"),
 });
 
 // Side shell gets slightly stronger reflections so the 3mm thickness reads from a near-front angle.
 const edgeGlowMaterial = new THREE.MeshPhysicalMaterial({
-  color: new THREE.Color("#d9ffff"),
+  color: new THREE.Color("#ffffff"),
   transparent: true,
   opacity: 1,
-  transmission: 0.92,
-  thickness: 1.05,
-  roughness: 0.08,
+  transmission: 0.95,
+  thickness: 1.1,
+  roughness: 0.06,
   metalness: 0,
-  ior: 1.52,
-  envMapIntensity: 1.45,
+  ior: 1.51,
+  envMapIntensity: 1.42,
   clearcoat: 1,
-  clearcoatRoughness: 0.025,
-  attenuationDistance: 1.9,
-  attenuationColor: new THREE.Color("#d7ffff"),
+  clearcoatRoughness: 0.02,
+  attenuationDistance: 2.2,
+  attenuationColor: new THREE.Color("#ffffff"),
 });
 
 const whiteMaskMaterial = new THREE.MeshBasicMaterial({
@@ -247,7 +247,7 @@ loader.load(
       const size = box.getSize(new THREE.Vector3());
 
       rootModel.position.sub(center);
-      rootModel.position.y = -0.01;
+      rootModel.position.y = 0.03;
       const scale = 1.22 / Math.max(size.x, size.y);
       rootModel.scale.setScalar(scale);
       rootModel.rotation.x = 0.12;
@@ -279,19 +279,6 @@ loader.load(
       reflectionModel.rotation.y = -0.32;
       reflectionModel.rotation.z = 0.015;
       keychainGroup.add(reflectionModel);
-
-      const aura = new THREE.Mesh(
-        new THREE.PlaneGeometry(2.2, 2.2),
-        new THREE.MeshBasicMaterial({
-          color: 0xb7fff1,
-          transparent: true,
-          opacity: 0.05,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false,
-        })
-      );
-      aura.position.set(0.03, -0.03, -0.32);
-      keychainGroup.add(aura);
 
       statusLabel.textContent = "Front preview ready";
     } catch (error) {
