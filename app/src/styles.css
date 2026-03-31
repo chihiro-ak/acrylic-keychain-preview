@@ -24,10 +24,7 @@ body {
 
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(255, 214, 151, 0.42), transparent 28%),
-    radial-gradient(circle at right 20%, rgba(151, 236, 233, 0.26), transparent 30%),
-    linear-gradient(180deg, #fffcf8 0%, #f8f2e7 100%);
+  background: #f3efe8;
   color: var(--ink);
 }
 
@@ -271,9 +268,7 @@ h1 {
   min-height: 560px;
   border-radius: 1.6rem;
   overflow: hidden;
-  background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.9), rgba(251, 245, 232, 0.72) 40%, rgba(220, 214, 206, 0.8) 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.08));
+  background: #dddddd;
 }
 
 #viewer canvas {
