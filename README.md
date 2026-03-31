@@ -1,14 +1,15 @@
 # Acrylic Keychain Preview
 
-アクリルキーホルダーの立体感をブラウザ上で確認するための静的プレビューです。
+アクリルキーホルダーの 3D 商品プレビューです。  
+GitHub Pages でそのまま公開できる静的構成で、`root` と `docs` の両方に同じビルド成果物を出します。
 
 ## Features
 
-- Three.js ベースの 3D プレビュー
-- アクリルらしい透明感、ハイライト、接地影を強めた商品見せ
-- 正面 / 斜め / 寄り のカメラ切り替え
-- 自動回転の ON / OFF
-- GitHub Pages に載せやすい相対パスビルド
+- three.js ベースの静的 3D プレビュー
+- 正面寄りで絵柄を読みやすくしつつ、少しだけ厚みが見える角度
+- アクリルの透明感、厚み、反射差を出す `MeshPhysicalMaterial`
+- 金具込みの完成モデル表示
+- 商品写真寄りの単色背景とごく薄い接地影
 
 ## Local Development
 
@@ -23,25 +24,25 @@ npm run dev
 npm run build
 ```
 
-生成物はリポジトリ root の `index.html` と `assets/` に反映されます。
-中間生成物は `.site-build/` です。
+中間成果物は `.site-build/`、公開用の成果物は `index.html` と `assets/`、加えて `docs/` にも出力されます。
 
 ## GitHub Pages
 
-GitHub Pages では以下の設定で公開できます。
-
 - Branch: `main`
-- Folder: `/ (root)`
+- Folder: `/ (root)` または `/docs`
 
-このリポジトリは root 配信前提で、Pages がそのまま読める完成済み静的ファイルを root に置く構成です。
+どちらの設定でも同じ静的ファイルが配信される構成です。
+
+## Recent Visual Tuning
+
+- カメラとモデル角度を「正面寄りのまま少しだけ斜め」に調整
+- アクリル材の `transmission`, `thickness`, `ior`, `clearcoat` を見直し
+- PMREM ベースの環境反射を維持しつつ、側面シェルの反射を少し強化
+- `ShadowMaterial` と薄い補助影で接地感を追加
+- 背景をクリーンなグレー単色へ整理
 
 ## Assets
 
-- `public/assets/1_3_keychain_3mm_puffy.glb`
+- `public/assets/1_3_keychain_final.glb`
 - `public/assets/1_3_print_rgba.png`
 - `public/assets/1_3_white_rgba.png`
-
-## Notes
-
-- `vite.config.js` で `base: "./"` にしているので、GitHub Pages 配下でも相対パスで動かしやすい構成です。
-- Pages の公開設定や push は未実施です。

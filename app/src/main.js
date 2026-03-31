@@ -17,15 +17,17 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(viewer.clientWidth, viewer.clientHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.62;
+renderer.toneMappingExposure = 0.7;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 viewer.appendChild(renderer.domElement);
 
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.03).texture;
-scene.background = new THREE.Color("#dddddd");
+scene.background = new THREE.Color("#e3e3e3");
 
 const camera = new THREE.PerspectiveCamera(27, viewer.clientWidth / viewer.clientHeight, 0.01, 50);
-camera.position.set(0.07, 0.08, 3.05);
+camera.position.set(0.02, 0.02, 3.12);
 scene.add(camera);
 
 const stage = new THREE.Group();
@@ -34,31 +36,41 @@ scene.add(stage);
 const keychainGroup = new THREE.Group();
 stage.add(keychainGroup);
 
-scene.add(new THREE.HemisphereLight(0xf0f0f0, 0x96a0af, 0.56));
+scene.add(new THREE.HemisphereLight(0xf5f5f5, 0xa3abba, 0.54));
 
-const keyLight = new THREE.DirectionalLight(0xfff8f2, 1.22);
-keyLight.position.set(1.7, 1.55, 2.7);
+const keyLight = new THREE.DirectionalLight(0xfffaf5, 1.18);
+keyLight.position.set(1.35, 1.8, 2.9);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(1024, 1024);
+keyLight.shadow.bias = -0.00008;
+keyLight.shadow.normalBias = 0.01;
+keyLight.shadow.camera.left = -2;
+keyLight.shadow.camera.right = 2;
+keyLight.shadow.camera.top = 2;
+keyLight.shadow.camera.bottom = -2;
+keyLight.shadow.camera.near = 0.5;
+keyLight.shadow.camera.far = 8;
 scene.add(keyLight);
 
-const fillLight = new THREE.DirectionalLight(0xe3e8ef, 0.48);
-fillLight.position.set(-1.75, 0.72, 2.1);
+const fillLight = new THREE.DirectionalLight(0xe3e7ef, 0.42);
+fillLight.position.set(-1.55, 0.72, 2.05);
 scene.add(fillLight);
 
-const rimLight = new THREE.PointLight(0xd6f6ff, 1.05, 0, 2);
-rimLight.position.set(1.05, 0.04, 1.05);
+const rimLight = new THREE.PointLight(0xcff3ff, 1.22, 0, 2);
+rimLight.position.set(1.1, 0.16, 1.2);
 scene.add(rimLight);
 
-const warmKick = new THREE.PointLight(0xffddba, 0.7, 0, 2);
-warmKick.position.set(-1.05, -0.18, 1.0);
+const warmKick = new THREE.PointLight(0xffe0be, 0.52, 0, 2);
+warmKick.position.set(-0.95, -0.1, 1.0);
 scene.add(warmKick);
 
 const floor = new THREE.Mesh(
   new THREE.CircleGeometry(2.8, 96),
   new THREE.MeshStandardMaterial({
-    color: 0xdedede,
-    roughness: 0.14,
+    color: 0xe1e1e1,
+    roughness: 0.18,
     metalness: 0.02,
-    envMapIntensity: 0.26,
+    envMapIntensity: 0.32,
   })
 );
 floor.rotation.x = -Math.PI / 2;
@@ -66,48 +78,38 @@ floor.position.y = -0.36;
 floor.scale.set(1.34, 1, 0.94);
 stage.add(floor);
 
-function createShadowTexture() {
-  const size = 512;
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const context = canvas.getContext("2d");
-  const gradient = context.createRadialGradient(
-    size * 0.5,
-    size * 0.52,
-    size * 0.06,
-    size * 0.5,
-    size * 0.52,
-    size * 0.42
-  );
-  gradient.addColorStop(0, "rgba(40, 36, 40, 0.34)");
-  gradient.addColorStop(0.45, "rgba(40, 36, 40, 0.16)");
-  gradient.addColorStop(1, "rgba(40, 36, 40, 0)");
-  context.fillStyle = gradient;
-  context.fillRect(0, 0, size, size);
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  return texture;
-}
-
 const shadowDisc = new THREE.Mesh(
-  new THREE.PlaneGeometry(2.3, 1.5),
-  new THREE.MeshBasicMaterial({
-    map: createShadowTexture(),
-    transparent: true,
-    opacity: 0.9,
-    depthWrite: false,
+  new THREE.PlaneGeometry(2.8, 1.8),
+  new THREE.ShadowMaterial({
+    color: 0x2a2427,
+    opacity: 0.12,
   })
 );
 shadowDisc.rotation.x = -Math.PI / 2;
-shadowDisc.position.y = -0.355;
+shadowDisc.position.y = -0.359;
 shadowDisc.position.z = 0.04;
+shadowDisc.receiveShadow = true;
 stage.add(shadowDisc);
+
+const softShadow = new THREE.Mesh(
+  new THREE.CircleGeometry(1.2, 96),
+  new THREE.MeshBasicMaterial({
+    color: 0x645952,
+    transparent: true,
+    opacity: 0.06,
+    depthWrite: false,
+  })
+);
+softShadow.rotation.x = -Math.PI / 2;
+softShadow.position.y = -0.358;
+softShadow.position.z = 0.05;
+softShadow.scale.set(1.18, 0.72, 1);
+stage.add(softShadow);
 
 const backdrop = new THREE.Mesh(
   new THREE.PlaneGeometry(6, 4),
   new THREE.MeshBasicMaterial({
-    color: 0xdddddd,
+    color: 0xe3e3e3,
   })
 );
 backdrop.position.set(0, 0.52, -1.8);
@@ -123,44 +125,56 @@ const whiteTexture = textureLoader.load("./assets/1_3_white_rgba.png");
   texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 });
 
+// Body stays readable from the front while using physical transmission for acrylic depth.
 const acrylicBodyMaterial = new THREE.MeshPhysicalMaterial({
-  color: new THREE.Color("#dcf1f2"),
-  transmission: 0.2,
-  thickness: 0.34,
-  roughness: 0.16,
+  color: new THREE.Color("#e3fbfb"),
+  transparent: true,
+  opacity: 1,
+  transmission: 0.9,
+  thickness: 0.74,
+  roughness: 0.1,
+  metalness: 0,
   ior: 1.49,
-  clearcoat: 0.74,
-  clearcoatRoughness: 0.06,
-  specularIntensity: 0.82,
-  envMapIntensity: 1.0,
-  attenuationDistance: 1.2,
-  attenuationColor: new THREE.Color("#d8f6f6"),
+  clearcoat: 1,
+  clearcoatRoughness: 0.04,
+  specularIntensity: 0.86,
+  envMapIntensity: 1.18,
+  attenuationDistance: 1.6,
+  attenuationColor: new THREE.Color("#cbf4f4"),
 });
 
 const acrylicCapMaterial = new THREE.MeshPhysicalMaterial({
   color: new THREE.Color("#fbffff"),
-  transmission: 0.26,
-  thickness: 0.34,
-  roughness: 0.065,
-  ior: 1.49,
+  transparent: true,
+  opacity: 1,
+  transmission: 0.94,
+  thickness: 0.92,
+  roughness: 0.05,
+  metalness: 0,
+  ior: 1.5,
   clearcoat: 0.96,
-  clearcoatRoughness: 0.035,
-  specularIntensity: 0.94,
-  envMapIntensity: 1.04,
-  attenuationDistance: 1.2,
-  attenuationColor: new THREE.Color("#ebffff"),
+  clearcoatRoughness: 0.03,
+  specularIntensity: 0.92,
+  envMapIntensity: 1.24,
+  attenuationDistance: 1.8,
+  attenuationColor: new THREE.Color("#e9ffff"),
 });
 
+// Side shell gets slightly stronger reflections so the 3mm thickness reads from a near-front angle.
 const edgeGlowMaterial = new THREE.MeshPhysicalMaterial({
-  color: new THREE.Color("#f7ffff"),
+  color: new THREE.Color("#d9ffff"),
   transparent: true,
-  opacity: 0.1,
-  transmission: 0.22,
-  thickness: 0.52,
-  roughness: 0.18,
-  ior: 1.37,
-  envMapIntensity: 1.0,
-  clearcoat: 0.24,
+  opacity: 1,
+  transmission: 0.92,
+  thickness: 1.05,
+  roughness: 0.08,
+  metalness: 0,
+  ior: 1.52,
+  envMapIntensity: 1.45,
+  clearcoat: 1,
+  clearcoatRoughness: 0.025,
+  attenuationDistance: 1.9,
+  attenuationColor: new THREE.Color("#d7ffff"),
 });
 
 const whiteMaskMaterial = new THREE.MeshBasicMaterial({
@@ -178,12 +192,12 @@ const printMaterial = new THREE.MeshBasicMaterial({
 });
 
 const metalMaterial = new THREE.MeshPhysicalMaterial({
-  color: new THREE.Color("#c8cdd6"),
+  color: new THREE.Color("#c7ccd5"),
   metalness: 1,
-  roughness: 0.12,
-  envMapIntensity: 2.05,
-  clearcoat: 0.24,
-  clearcoatRoughness: 0.08,
+  roughness: 0.1,
+  envMapIntensity: 1.9,
+  clearcoat: 0.32,
+  clearcoatRoughness: 0.06,
 });
 
 let rootModel;
@@ -203,7 +217,7 @@ loader.load(
           return;
         }
 
-        child.castShadow = false;
+        child.castShadow = true;
         child.receiveShadow = false;
 
         const name = `${child.name} ${child.material?.name ?? ""}`.toLowerCase();
@@ -233,12 +247,12 @@ loader.load(
       const size = box.getSize(new THREE.Vector3());
 
       rootModel.position.sub(center);
-      rootModel.position.y = -0.02;
-      const scale = 1.28 / Math.max(size.x, size.y);
+      rootModel.position.y = -0.01;
+      const scale = 1.22 / Math.max(size.x, size.y);
       rootModel.scale.setScalar(scale);
-      rootModel.rotation.x = THREE.MathUtils.degToRad(-14);
-      rootModel.rotation.y = THREE.MathUtils.degToRad(12);
-      rootModel.rotation.z = THREE.MathUtils.degToRad(1.4);
+      rootModel.rotation.x = 0.12;
+      rootModel.rotation.y = -0.32;
+      rootModel.rotation.z = 0.015;
 
       keychainGroup.add(rootModel);
 
@@ -259,11 +273,11 @@ loader.load(
         }
       });
       reflectionModel.scale.y *= -1;
-      reflectionModel.position.y = -0.68;
-      reflectionModel.position.z = 0.02;
-      reflectionModel.rotation.x = THREE.MathUtils.degToRad(-166);
-      reflectionModel.rotation.y = THREE.MathUtils.degToRad(12);
-      reflectionModel.rotation.z = THREE.MathUtils.degToRad(1.4);
+      reflectionModel.position.y = -0.7;
+      reflectionModel.position.z = 0.03;
+      reflectionModel.rotation.x = Math.PI - 0.12;
+      reflectionModel.rotation.y = -0.32;
+      reflectionModel.rotation.z = 0.015;
       keychainGroup.add(reflectionModel);
 
       const aura = new THREE.Mesh(
@@ -276,7 +290,7 @@ loader.load(
           depthWrite: false,
         })
       );
-      aura.position.set(0.06, -0.02, -0.32);
+      aura.position.set(0.03, -0.03, -0.32);
       keychainGroup.add(aura);
 
       statusLabel.textContent = "Front preview ready";
