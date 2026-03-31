@@ -8,15 +8,6 @@
       name="description"
       content="アクリルキーホルダーの立体感をブラウザ上で確認するためのプレビュー"
     />
-    <script>
-      const isLocalHost =
-        window.location.hostname === "localhost" ||
-        window.location.hostname === "127.0.0.1";
-      const isDocsPath = window.location.pathname.includes("/docs/");
-      if (!isLocalHost && !isDocsPath) {
-        window.location.replace(new URL("./docs/", window.location.href));
-      }
-    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -33,10 +24,10 @@
       <main class="layout">
         <section class="copy-panel">
           <p class="eyebrow">Acrylic Product Preview</p>
-          <h1>アクキーの<br />“ぷるっ”と感を<br />ブラウザで確認</h1>
+          <h1>アクキーの<br />立体感を<br />ブラウザで確認</h1>
           <p class="lede">
-            実データの形状を使いながら、光沢、透け、接地影、縁のハイライトを少し強めに見せる商品プレビューです。
-            GitHub Pages にそのまま載せられる静的構成にしています。
+            完成モデルを使って、金具を含めたアクリルキーホルダーの見え方をブラウザ上で確認するための静的プレビューです。
+            正面から絵柄が見える商品写真寄りの見せ方に整えています。
           </p>
 
           <div class="stat-grid">
@@ -50,7 +41,7 @@
             </article>
             <article>
               <span>Preview</span>
-              <strong>Interactive</strong>
+              <strong>Front Static</strong>
             </article>
           </div>
 
@@ -67,7 +58,7 @@
             <p>見せ方メモ</p>
             <ul>
               <li>完成モデルを使って、金具まで含めた商品見えを優先しています。</li>
-              <li>正面から絵柄が読めるように、印刷面は少し明るく補正しています。</li>
+              <li>正面から絵柄が読めるように、印刷面は少し明るく見える設定にしています。</li>
               <li>アクリル面と金具の反射差で、キーホルダーらしさを出しています。</li>
             </ul>
           </div>
