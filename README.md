@@ -23,16 +23,17 @@ npm run dev
 npm run build
 ```
 
-生成物は `docs/` に出ます。
+生成物はリポジトリ root の `index.html` と `assets/` に反映されます。
+中間生成物は `.site-build/` です。
 
 ## GitHub Pages
 
 GitHub Pages では以下の設定で公開できます。
 
 - Branch: `main`
-- Folder: `/docs`
+- Folder: `/ (root)`
 
-このリポジトリは `docs/` にビルド済み静的ファイルを置く構成です。
+このリポジトリは root 配信前提で、Pages がそのまま読める完成済み静的ファイルを root に置く構成です。
 
 ## Assets
 
