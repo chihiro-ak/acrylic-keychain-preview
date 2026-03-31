@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acrylic Charm Preview</title>
+    <meta
+      name="description"
+      content="アクリルキーホルダーの立体感をブラウザ上で確認するためのプレビュー"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="aurora aurora-left"></div>
+      <div class="aurora aurora-right"></div>
+      <main class="layout">
+        <section class="copy-panel">
+          <p class="eyebrow">Acrylic Product Preview</p>
+          <h1>アクキーの<br />“ぷるっ”と感を<br />ブラウザで確認</h1>
+          <p class="lede">
+            実データの形状を使いながら、光沢、透け、接地影、縁のハイライトを少し強めに見せる商品プレビューです。
+            GitHub Pages にそのまま載せられる静的構成にしています。
+          </p>
+
+          <div class="stat-grid">
+            <article>
+              <span>Thickness</span>
+              <strong>3.0 mm</strong>
+            </article>
+            <article>
+              <span>Finish</span>
+              <strong>Gloss Acrylic</strong>
+            </article>
+            <article>
+              <span>Preview</span>
+              <strong>Interactive</strong>
+            </article>
+          </div>
+
+          <div class="control-block">
+            <div class="control-label">Camera</div>
+            <div class="button-row" id="cameraControls">
+              <button class="mode-button active" data-view="hero">斜め</button>
+              <button class="mode-button" data-view="front">正面</button>
+              <button class="mode-button" data-view="detail">寄り</button>
+            </div>
+          </div>
+
+          <div class="control-block">
+            <div class="control-label">Motion</div>
+            <div class="button-row" id="motionControls">
+              <button class="mode-button active" data-spin="on">自動回転 ON</button>
+              <button class="mode-button" data-spin="off">自動回転 OFF</button>
+            </div>
+          </div>
+
+          <div class="note-card">
+            <p>見せ方メモ</p>
+            <ul>
+              <li>外周のリムライトを強めて、アクリルの厚みを拾っています。</li>
+              <li>印刷層はややマット、クリア層は高光沢で材質差を出しています。</li>
+              <li>マウス移動でごく小さく追従して、商品を手元で傾ける感じを再現しています。</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="viewer-panel">
+          <div class="viewer-card">
+            <div class="viewer-topline">
+              <span class="live-pill">Live Preview</span>
+              <span id="statusLabel">Loading model...</span>
+            </div>
+            <div id="viewer"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
